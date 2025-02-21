@@ -20,6 +20,9 @@ inputs:
   publish_artifacts:
     description: 'Publish the artifacts'
     default: 'false'
+  main_branch:
+    description: 'The branch which should also be qualify for production release'
+    default: 'main'
 outputs:
   version:
     description: 'The version of the artifact'
@@ -56,7 +59,7 @@ runs:
       id: ref
       env: 
           HOTFIX: ${{ contains(github.ref, 'hotfix/') }}
-          MASTER: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+          MASTER: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == format('refs/heads/{0}',inputs.main_branch)}}
       run: |
           echo ::set-output name=hotfix::$HOTFIX
           echo ::set-output name=master::$MASTER
